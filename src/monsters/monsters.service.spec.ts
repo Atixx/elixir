@@ -3,6 +3,8 @@ import { Model } from 'mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MonstersService } from './monsters.service';
 import { Monster } from './schemas/monster.schema';
+import { CreateMonsterDto } from './dto/create-monster.dto';
+import { UpdateMonsterDto } from './dto/update-monster.dto';
 
 const mockMonster = {
   first_name: 'Wise',
@@ -27,11 +29,17 @@ describe('MonstersService', () => {
         {
           provide: getModelToken('Monster'),
           useValue: {
-            new: jest.fn().mockResolvedValue(mockMonster),
-            constructor: jest.fn().mockResolvedValue(mockMonster),
-            find: jest.fn(),
-            create: jest.fn(),
-            exec: jest.fn(),
+            find: jest.fn().mockReturnValue({
+              exec: jest.fn().mockResolvedValue([mockMonster]),
+            }),
+            findOne: jest.fn().mockReturnValue({
+              exec: jest.fn().mockResolvedValue(mockMonster),
+            }),
+            findByIdAndDelete: jest.fn().mockReturnValue({
+              exec: jest.fn().mockResolvedValue(mockMonster),
+            }),
+            create: jest.fn().mockResolvedValue(mockMonster),
+            findOneAndUpdate: jest.fn().mockResolvedValue(mockMonster),
           },
         },
       ],
@@ -43,5 +51,68 @@ describe('MonstersService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('should call model findAll method', () => {
+      service.findAll();
+      expect(model.find).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('create', () => {
+    it('should call model create method with params', () => {
+      const expectedParams: CreateMonsterDto = {
+        firstName: 'foo',
+        lastName: '',
+        title: '',
+        gender: '',
+        description: '',
+        nationalities: [],
+        image_url: '',
+        speed: 0,
+      };
+
+      service.create(expectedParams);
+      expect(model.create).toHaveBeenCalledTimes(1);
+      expect(model.create).toHaveBeenCalledWith(expectedParams);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should call model findOne method with ID', () => {
+      const id = '123asd';
+
+      service.findOne(id);
+      expect(model.findOne).toHaveBeenCalledTimes(1);
+      expect(model.findOne).toHaveBeenCalledWith({ _id: id });
+    });
+  });
+
+  describe('remove', () => {
+    it('should call model findByIdAndDelete method with ID', () => {
+      const id = '123asd';
+
+      service.remove(id);
+      expect(model.findByIdAndDelete).toHaveBeenCalledTimes(1);
+      expect(model.findByIdAndDelete).toHaveBeenCalledWith({ _id: id });
+    });
+  });
+
+  describe('update', () => {
+    it('should call model findOneAndUpdate method with ID and dto', () => {
+      const id = '123asd';
+      const expectedParams: UpdateMonsterDto = {
+        speed: 3.2,
+      };
+
+      service.update(id, expectedParams);
+      expect(model.findOneAndUpdate).toHaveBeenCalledTimes(1);
+      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: id },
+        expectedParams,
+        { new: true },
+      );
+    });
   });
 });

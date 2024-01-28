@@ -20,16 +20,17 @@ export class MonstersService {
     return this.monsterModel.find().exec();
   }
 
-  async findOne(id: number): Promise<Monster | null> {
+  async findOne(id: string): Promise<Monster | null> {
     return this.monsterModel.findOne({ _id: id }).exec();
   }
 
-  // TODO: implement
-  async update(id: number, updateMonsterDto: UpdateMonsterDto) {
-    return `This action updates a #${id} monster`;
+  async update(id: string, updateMonsterDto: UpdateMonsterDto) {
+    return this.monsterModel.findOneAndUpdate({ _id: id }, updateMonsterDto, {
+      new: true,
+    });
   }
 
-  async remove(id: number): Promise<Monster | null> {
+  async remove(id: string): Promise<Monster | null> {
     const deletedMonster = await this.monsterModel
       .findByIdAndDelete({ _id: id })
       .exec();

@@ -9,7 +9,7 @@
 ### Reqs - includes choices made
 
 1. NestJS applicaiton
-2. Extress Server
+2. Express Server
 3. MongoDB + Mongoose (maybe)
 4. Keep it modular
 5. Handle errors + exceptions as required
@@ -24,6 +24,18 @@
 5. add authentication
 6. Add API key rate limitor
 7. measure performance
+
+### TODO from list
+
+* correctly test services & controllers (unit tests)
+* correctly add e2e tests for all endpoints
+* add controller/service functionalites:
+  * establish uniqueness on monster, verify on creation/update
+
+* add schema/model functionalities:
+  * add gender and nationalities from permitted collection
+  * same for title?
+  * test for restrictions
 
 ## Description
 

@@ -21,10 +21,10 @@ export class Monster {
   description: string;
 
   @Prop([String])
-  nationality: string[]; // TODO: add enum/reference/limit options
+  nationalities: string[]; // TODO: add enum/reference/limit options
 
   @Prop()
-  image: string;
+  image_url: string;
 
   @Prop()
   goldBalance: number;
