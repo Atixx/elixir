@@ -9,12 +9,17 @@ import {
   UsePipes,
   ValidationPipe,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { MonstersService } from './monsters.service';
 import { CreateMonsterDto } from './dto/create-monster.dto';
 import { UpdateMonsterDto } from './dto/update-monster.dto';
 import { NotFoundInterceptor } from '../interceptors/not-found.interceptor';
 import { IsObjectIdPipe } from 'nestjs-object-id';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Role } from '../users/role.enum';
+import { Roles } from '../users/roles.decorator';
+import { RolesGuard } from '../users/roles.guard';
 
 const NOT_FOUND_ERROR_MSG = 'Monster not found';
 
@@ -23,6 +28,8 @@ export class MonstersController {
   constructor(private readonly monstersService: MonstersService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   create(@Body() createMonsterDto: CreateMonsterDto) {
     return this.monstersService.create(createMonsterDto);
@@ -35,6 +42,8 @@ export class MonstersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
   async findOne(@Param('id', IsObjectIdPipe) id: string) {
     const model = await this.monstersService.findOne(id);
@@ -43,6 +52,8 @@ export class MonstersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
   async update(
     @Param('id', IsObjectIdPipe) id: string,
@@ -54,6 +65,8 @@ export class MonstersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async remove(@Param('id', IsObjectIdPipe) id: string) {
