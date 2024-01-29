@@ -5,6 +5,7 @@ import { MonstersService } from './monsters.service';
 import { Monster } from './schemas/monster.schema';
 import { CreateMonsterDto } from './dto/create-monster.dto';
 import { UpdateMonsterDto } from './dto/update-monster.dto';
+import { Gender } from './constants';
 
 const mockMonster = {
   first_name: 'Wise',
@@ -66,7 +67,7 @@ describe('MonstersService', () => {
         firstName: 'foo',
         lastName: '',
         title: '',
-        gender: '',
+        gender: Gender.Other,
         description: '',
         nationalities: [],
         image_url: '',

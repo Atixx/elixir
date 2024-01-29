@@ -1,35 +1,36 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Gender, Nationalities } from '../constants';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type MonsterDocument = HydratedDocument<Monster>;
 
 @Schema()
 export class Monster {
-  @Prop()
+  @Prop({ required: true })
   firstName: string;
 
-  @Prop()
+  @Prop({ required: true })
   lastName: string;
 
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
-  gender: string; // TODO: add enum/reference/limit options
+  @Prop({ type: String, enum: Gender, required: true })
+  gender: string;
 
   @Prop()
   description: string;
 
-  @Prop([String])
-  nationalities: string[]; // TODO: add enum/reference/limit options
+  @Prop([{ type: String, enum: Nationalities, required: true }])
+  nationalities: Nationalities[];
 
   @Prop()
   image_url: string;
 
-  @Prop()
+  @Prop({ default: 0 })
   goldBalance: number;
 
-  @Prop()
+  @Prop({ type: Types.Decimal128, required: true })
   speed: number; // TODO: make sure this floating point works well, use https://mongoosejs.com/docs/api/mongoose.html#Mongoose.prototype.Decimal128
 
   @Prop()

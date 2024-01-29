@@ -1,4 +1,11 @@
-import { IsArray, IsNumber, IsPositive, IsString } from 'class-validator';
+import {
+  IsDecimal,
+  IsEnum,
+  IsPositive,
+  IsString,
+  IsUrl,
+} from 'class-validator';
+import { Gender, Nationalities } from '../constants';
 
 export class CreateMonsterDto {
   @IsString()
@@ -10,19 +17,19 @@ export class CreateMonsterDto {
   @IsString()
   title: string;
 
-  @IsString()
-  gender: string;
+  @IsEnum(Gender)
+  gender: Gender;
 
   @IsString()
   description: string;
 
-  @IsArray()
-  nationalities: string[];
+  @IsEnum(Nationalities, { each: true })
+  nationalities: Nationalities[];
 
   @IsString()
+  @IsUrl()
   image_url: string;
 
-  @IsNumber()
-  @IsPositive()
+  @IsDecimal() // TODO: figure out if we need to cast it to another DTO
   speed: number;
 }
