@@ -116,4 +116,11 @@ describe('MonstersService', () => {
       );
     });
   });
+
+  describe('removeGold', () => {
+    // TODO: fail correctly
+    xit('should fail if attempting to remove more gold than available', () => {
+      test.todo;
+    });
+  });
 });

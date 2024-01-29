@@ -30,16 +30,23 @@
 * correctly test services & controllers (unit tests)
 * correctly add e2e tests for all endpoints
 * add controller/service functionalites:
-  * establish uniqueness on monster, verify on creation/update
+  * establish uniqueness on monster, verify on creation/update (see below)
 
 * add schema/model functionalities:
-  * add gender and nationalities from permitted collection
-  * same for title?
+  * ~~add gender and nationalities from permitted collection~~
+  * ~~same for title?~~
+  * add unique validation for name (both) + title
   * test for restrictions
 
 ## Description
 
 Backend Monsters CRUD server, serving admin and public APIs
+
+## Technical considerations
+
+Gold updates should use transactions instead of `.findOneAndUpdates` due to the caveats around using validations with those functions (especially on the `$inc` operator). But mongo allows transactions only when a replica set is configured, which although is possible using the docker compose in the project, it goes beyond the scope of this technical challenge due to time constrains.
+
+Therefore to get a reliable service in this challenge, `findOneAndUpdate` was used.
 
 ## Installation
 
@@ -73,17 +80,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

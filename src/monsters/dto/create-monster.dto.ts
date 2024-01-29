@@ -1,10 +1,4 @@
-import {
-  IsDecimal,
-  IsEnum,
-  IsPositive,
-  IsString,
-  IsUrl,
-} from 'class-validator';
+import { IsDecimal, IsEnum, IsString, IsUrl } from 'class-validator';
 import { Gender, Nationalities } from '../constants';
 
 export class CreateMonsterDto {

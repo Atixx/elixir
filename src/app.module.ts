@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MonstersModule } from './monsters/monsters.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { KnownErrorFilter } from './errors/filters/known-errors.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -13,7 +13,12 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     UsersModule,
   ], // TODO: add config params
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: KnownErrorFilter,
+    },
+  ],
 })
 export class AppModule {}
