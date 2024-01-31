@@ -5,6 +5,8 @@
 /db-data/*
 !/db-data/.keep
 
+.env
+
 # Logs
 logs
 *.log
