@@ -1,42 +1,4 @@
-# Elixir Challenge
-
-## TODO
-
-1. Store Models in DB
-2. CRUD with 2 clients - admin API and public API
-3. Gold Balance -> add remove reliably (money)
-
-### Reqs - includes choices made
-
-1. NestJS applicaiton
-2. Express Server
-3. MongoDB + Mongoose (maybe)
-4. Keep it modular
-5. Handle errors + exceptions as required
-6. Deploy somewhere
-
-### Optional reqs
-
-1. Cache with redis
-2. Event Driven Design
-3. voting system
-4. Paginate monster list
-5. add authentication
-6. Add API key rate limitor
-7. measure performance
-
-### TODO from list
-
-* correctly test services & controllers (unit tests)
-* correctly add e2e tests for all endpoints
-* add controller/service functionalites:
-  * establish uniqueness on monster, verify on creation/update (see below)
-
-* add schema/model functionalities:
-  * ~~add gender and nationalities from permitted collection~~
-  * ~~same for title?~~
-  * ~~add unique validation for name (both) + title~~
-  * test for restrictions
+# Elixir Games challenge
 
 ## Description
 
@@ -54,35 +16,38 @@ Therefore to get a reliable service in this challenge, `findOneAndUpdate` was us
 
 Some presentation DTO was impemented, but more detailed work was possible (especially with decimal types, to consistently round to 4 decimal places), and were avoided due to challenge time constraints.
 
-## Installation
+### Documentation
 
-```bash
-# setup dependencies
-$ npm install
-```
+Simple swagger documentation is present for the API, a more complete project would include better detailed request and response payload and header examples
+
+### Authentication
+
+Simple authentication was used with hard-coded in memory verification, clearly this adapted for the simple challenge example
 
 ## Running the app
 
-```bash
-# development
-$ npm run start
+Requires Docker with docker compose.
 
-# watch mode
-$ npm run start:dev
+Running `docker compose up --build -d` will start the mongo server, initializing the data on the repository's `./db-data` directory, will wait for service to be healthy and start the NestJS service.
 
-# production mode
-$ npm run start:prod
+Check the documentation at:
+
+`http://localhost:3000/api`
+
+### User login information
+
+* **User: Bored Mike**
+
+```plain
+username: mike
+pass: bored
+roles: Admin and User
 ```
 
-## Test
+* **User: Elixir CEO**
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```plain
+username: elixirCEO
+pass: gimme-gold
+roles: Admin and CEO
 ```

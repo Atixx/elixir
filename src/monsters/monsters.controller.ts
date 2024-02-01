@@ -26,14 +26,24 @@ import { RemoveGoldDto } from './dto/remove-gold.dto';
 import { MapInterceptor } from '@automapper/nestjs';
 import { Monster } from './schemas/monster.schema';
 import { ShowMonsterDto } from './dto/presenters/show-monsters.dto';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 const NOT_FOUND_ERROR_MSG = 'Monster not found';
 
+@ApiTags('monsters')
 @Controller('monsters')
 export class MonstersController {
   constructor(private readonly monstersService: MonstersService) {}
 
   @Post()
+  @ApiCreatedResponse()
+  @ApiUnauthorizedResponse()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @UseInterceptors(MapInterceptor(Monster, ShowMonsterDto))
@@ -43,6 +53,8 @@ export class MonstersController {
   }
 
   @Get()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
   @UseInterceptors(MapInterceptor(Monster, ShowMonsterDto, { isArray: true }))
   findAll() {
     return this.monstersService.findAll();
@@ -50,6 +62,9 @@ export class MonstersController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse()
   @Roles(Role.Admin)
   @UseInterceptors(
     MapInterceptor(Monster, ShowMonsterDto),
@@ -64,6 +79,9 @@ export class MonstersController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse()
   @UseInterceptors(
     MapInterceptor(Monster, ShowMonsterDto),
     new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
@@ -81,6 +99,9 @@ export class MonstersController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse()
   @UseInterceptors(
     MapInterceptor(Monster, ShowMonsterDto),
     new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
@@ -95,6 +116,9 @@ export class MonstersController {
   @Post(':id/add_gold')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.CEO, Role.Admin)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse()
   @UseInterceptors(
     MapInterceptor(Monster, ShowMonsterDto),
     new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
@@ -117,6 +141,9 @@ export class MonstersController {
   @Post(':id/remove_gold')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse()
   @UseInterceptors(
     MapInterceptor(Monster, ShowMonsterDto),
     new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
