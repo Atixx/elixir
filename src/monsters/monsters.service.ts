@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Monster } from './schemas/monster.schema';
@@ -57,7 +57,14 @@ export class MonstersService {
       return null;
     }
 
-    if (monster.goldBalance < removeGold.decreaseAmount) {
+    const decimalAmount = new Types.Decimal128(removeGold.decreaseAmount);
+
+    // we need to do this to be able to do arithmetic
+    // see: http://thecodebarbarian.com/a-nodejs-perspective-on-mongodb-34-decimal.html
+    if (
+      parseFloat(monster.goldBalance.toString()) <
+      parseFloat(decimalAmount.toString())
+    ) {
       throw new NegativeBalanceError({
         error: `negative balance not allowed, after operation reducing ${removeGold.decreaseAmount} from ${monster.goldBalance}`,
       });
@@ -66,7 +73,7 @@ export class MonstersService {
     return this.monsterModel.findOneAndUpdate(
       { _id: removeGold.id },
       {
-        $inc: { goldBalance: removeGold.decreaseAmount * -1 },
+        $inc: { goldBalance: (decimalAmount as any) * -1.0 },
       },
       { new: true },
     );

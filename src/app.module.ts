@@ -8,6 +8,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { HealthController } from './health/health.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
@@ -25,8 +27,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
     UsersModule,
     TerminusModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
+    ConfigModule.forRoot(),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
     }),
   ],
   controllers: [HealthController],

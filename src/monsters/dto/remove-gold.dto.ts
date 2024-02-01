@@ -5,5 +5,5 @@ export class RemoveGoldDto {
   id: string;
 
   @IsNumber()
-  decreaseAmount: number;
+  decreaseAmount: string;
 }

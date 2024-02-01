@@ -23,6 +23,9 @@ import { RolesGuard } from '../users/roles.guard';
 import { AddGoldDto } from './dto/add-gold.dto';
 import { GoldChangeDto } from './dto/inputs/gold-change.dto';
 import { RemoveGoldDto } from './dto/remove-gold.dto';
+import { MapInterceptor } from '@automapper/nestjs';
+import { Monster } from './schemas/monster.schema';
+import { ShowMonsterDto } from './dto/presenters/show-monsters.dto';
 
 const NOT_FOUND_ERROR_MSG = 'Monster not found';
 
@@ -33,21 +36,25 @@ export class MonstersController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
+  @UseInterceptors(MapInterceptor(Monster, ShowMonsterDto))
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   create(@Body() createMonsterDto: CreateMonsterDto) {
     return this.monstersService.create(createMonsterDto);
   }
 
   @Get()
+  @UseInterceptors(MapInterceptor(Monster, ShowMonsterDto, { isArray: true }))
   findAll() {
-    // TODO: wrap this in a better response object, avoiding outer level array in body
     return this.monstersService.findAll();
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
+  @UseInterceptors(
+    MapInterceptor(Monster, ShowMonsterDto),
+    new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
+  )
   async findOne(@Param('id', IsObjectIdPipe) id: string) {
     const model = await this.monstersService.findOne(id);
     if (!model) return undefined;
@@ -57,7 +64,10 @@ export class MonstersController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
+  @UseInterceptors(
+    MapInterceptor(Monster, ShowMonsterDto),
+    new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
+  )
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async update(
     @Param('id', IsObjectIdPipe) id: string,
@@ -71,7 +81,10 @@ export class MonstersController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
+  @UseInterceptors(
+    MapInterceptor(Monster, ShowMonsterDto),
+    new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
+  )
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async remove(@Param('id', IsObjectIdPipe) id: string) {
     const model = await this.monstersService.remove(id);
@@ -82,7 +95,10 @@ export class MonstersController {
   @Post(':id/add_gold')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.CEO, Role.Admin)
-  @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
+  @UseInterceptors(
+    MapInterceptor(Monster, ShowMonsterDto),
+    new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
+  )
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async addGold(
     @Param('id', IsObjectIdPipe) id: string,
@@ -101,7 +117,10 @@ export class MonstersController {
   @Post(':id/remove_gold')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @UseInterceptors(new NotFoundInterceptor(NOT_FOUND_ERROR_MSG))
+  @UseInterceptors(
+    MapInterceptor(Monster, ShowMonsterDto),
+    new NotFoundInterceptor(NOT_FOUND_ERROR_MSG),
+  )
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async removeGold(
     @Param('id', IsObjectIdPipe) id: string,
@@ -109,7 +128,7 @@ export class MonstersController {
   ) {
     const removeGold: RemoveGoldDto = {
       id,
-      decreaseAmount: parseFloat(decreaseDto.amount),
+      decreaseAmount: decreaseDto.amount,
     };
 
     const model = await this.monstersService.removeGold(removeGold);
