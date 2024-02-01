@@ -35,7 +35,7 @@
 * add schema/model functionalities:
   * ~~add gender and nationalities from permitted collection~~
   * ~~same for title?~~
-  * add unique validation for name (both) + title
+  * ~~add unique validation for name (both) + title~~
   * test for restrictions
 
 ## Description

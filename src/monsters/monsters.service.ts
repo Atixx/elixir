@@ -7,6 +7,9 @@ import { UpdateMonsterDto } from './dto/update-monster.dto';
 import { AddGoldDto } from './dto/add-gold.dto';
 import { RemoveGoldDto } from './dto/remove-gold.dto';
 import { NegativeBalanceError } from '../errors/types/negative-balance-error';
+import { DatabaseError } from '../errors/types/database-error';
+import { MONGO_ERR_CODES } from '../errors/constants';
+import { DuplicateError } from '../errors/types/duplicate-error';
 
 @Injectable()
 export class MonstersService {
@@ -15,8 +18,15 @@ export class MonstersService {
   ) {}
 
   async create(createMonsterDto: CreateMonsterDto): Promise<Monster> {
-    const createdMonster = await this.monsterModel.create(createMonsterDto);
-    return createdMonster;
+    return this.monsterModel
+      .create(createMonsterDto)
+      .catch((err: Record<string, unknown>) => {
+        if (err.code == MONGO_ERR_CODES.unique_violation) {
+          throw new DuplicateError(err);
+        } else {
+          throw new DatabaseError(err);
+        }
+      });
   }
 
   async findAll(): Promise<Monster[]> {

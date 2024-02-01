@@ -64,4 +64,9 @@ export class Monster extends Document {
   monsterPassword: string; // TODO: how do we salt+hash this?
 }
 
-export const MonsterSchema = SchemaFactory.createForClass(Monster);
+const MonsterSchema = SchemaFactory.createForClass(Monster).index(
+  { title: 1, firstName: 1, lastName: 1 },
+  { unique: true },
+);
+
+export { MonsterSchema };

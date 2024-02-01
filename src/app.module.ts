@@ -20,6 +20,7 @@ import { classes } from '@automapper/classes';
         user: configService.get<string>('DB_USER'),
         pass: configService.get<string>('DB_PASS'),
         dbName: configService.get<string>('DB_NAME'),
+        autoIndex: true,
       }),
       inject: [ConfigService],
     }),
